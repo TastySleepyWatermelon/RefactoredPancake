@@ -17,7 +17,9 @@ jobs:
           channel: stable
 
       - name: Get dependencies
+        working-directory: refactored_pancake
         run: flutter pub get
 
       - name: Build APK
+        working-directory: refactored_pancake
         run: flutter build apk --release
