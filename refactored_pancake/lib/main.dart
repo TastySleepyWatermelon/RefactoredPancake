@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:refactored_pancake/screens/assistant_screen.dart';
 import 'package:refactored_pancake/screens/home_screen.dart';
-import 'package:refactored_pancake/screens/medications_screen.dart';
 import 'package:refactored_pancake/screens/schedule_screen.dart';
 import 'package:refactored_pancake/screens/tasks_screen.dart';
 
@@ -32,8 +31,7 @@ class _MainAppState extends State<MainApp> {
   static const List<Widget> _screens = [
     HomeScreen(),
     ScheduleScreen(),
-    // MedicationsScreen(),
-    // TasksScreen(),
+    TasksScreen(),
     AssistantScreen(),
   ];
 
@@ -69,16 +67,11 @@ class _MainAppState extends State<MainApp> {
                   selectedIcon: Icon(Icons.calendar_month),
                   label: 'Schedule',
                 ),
-                // NavigationDestination(
-                //   icon: Icon(Icons.medication_outlined),
-                //   selectedIcon: Icon(Icons.medication),
-                //   label: 'Medications',
-                // ),
-                // NavigationDestination(
-                //   icon: Icon(Icons.check_box_outlined),
-                //   selectedIcon: Icon(Icons.check_box),
-                //   label: 'Tasks',
-                // ),
+                NavigationDestination(
+                  icon: Icon(Icons.check_box_outlined),
+                  selectedIcon: Icon(Icons.check_box),
+                  label: 'Tasks',
+                ),
                 NavigationDestination(
                   icon: Icon(Icons.auto_awesome_outlined),
                   selectedIcon: Icon(Icons.auto_awesome),

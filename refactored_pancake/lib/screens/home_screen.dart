@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('Welcome to M3'),
-          FilledButton(onPressed: () {}, child: Text("Hello")),
+          FilledButton(onPressed: () {}, child: Text('Hello')),
         ],
       ),
     );
