@@ -8,10 +8,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Text(
-            'Welcome to M3',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+          Text('Welcome to M3'),
           FilledButton(onPressed: () {}, child: Text("Hello")),
         ],
       ),

@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: Scaffold(body: HomeScreen()),
     );
   }
 }
