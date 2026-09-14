@@ -4,14 +4,14 @@ import 'package:refactored_pancake/screens/home_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   await dotenv.load(fileName: '.env');
 
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
+
+  WidgetsFlutterBinding.ensureInitialized();
 
   runApp(const MainApp());
 }
@@ -21,14 +21,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Green.
-    final color = Color(0xFF5B8A72);
-
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: color,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
