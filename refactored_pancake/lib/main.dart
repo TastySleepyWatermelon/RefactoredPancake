@@ -32,8 +32,9 @@ class _MainAppState extends State<MainApp> {
   static const List<Widget> _screens = [
     HomeScreen(),
     ScheduleScreen(),
-    MedicationsScreen(),
-    TasksScreen(),
+    // MedicationsScreen(),
+    // TasksScreen(),
+    AssistantScreen(),
   ];
 
   int _selectedIndex = 0;
@@ -50,17 +51,6 @@ class _MainAppState extends State<MainApp> {
         builder: (context) {
           return Scaffold(
             body: _screens[_selectedIndex],
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    fullscreenDialog: true,
-                    builder: (context) => const AssistantScreen(),
-                  ),
-                );
-              },
-              child: const Icon(Icons.auto_awesome),
-            ),
             bottomNavigationBar: NavigationBar(
               selectedIndex: _selectedIndex,
               onDestinationSelected: (int index) {
@@ -79,15 +69,20 @@ class _MainAppState extends State<MainApp> {
                   selectedIcon: Icon(Icons.calendar_month),
                   label: 'Schedule',
                 ),
+                // NavigationDestination(
+                //   icon: Icon(Icons.medication_outlined),
+                //   selectedIcon: Icon(Icons.medication),
+                //   label: 'Medications',
+                // ),
+                // NavigationDestination(
+                //   icon: Icon(Icons.check_box_outlined),
+                //   selectedIcon: Icon(Icons.check_box),
+                //   label: 'Tasks',
+                // ),
                 NavigationDestination(
-                  icon: Icon(Icons.medication_outlined),
-                  selectedIcon: Icon(Icons.medication),
-                  label: 'Medications',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.check_box_outlined),
-                  selectedIcon: Icon(Icons.check_box),
-                  label: 'Tasks',
+                  icon: Icon(Icons.auto_awesome_outlined),
+                  selectedIcon: Icon(Icons.auto_awesome),
+                  label: 'Assistant',
                 ),
               ],
             ),

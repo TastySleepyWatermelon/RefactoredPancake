@@ -7,14 +7,9 @@ class AssistantScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('AI Assistant'),
+        title: const Text('Assistant'),
       ),
       body: const Center(child: Text('Assistant')),
     );
   }
 }
-
