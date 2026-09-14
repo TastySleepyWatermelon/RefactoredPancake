@@ -135,6 +135,13 @@ class DatabaseService {
     await _client.from('medications').delete().eq('id', id);
   }
 
+  Future<void> markMedicationTaken(String id, String confirmedBy) async {
+    await _client.from('medications').update({
+      'status': 'taken',
+      'confirmed_by': confirmedBy,
+    }).eq('id', id);
+  }
+
   // ---------------------------------------------------------------------
   // Tasks
   // ---------------------------------------------------------------------
@@ -147,6 +154,15 @@ class DatabaseService {
   Future<Task> getTaskById(String id) async {
     final row = await _client.from('tasks').select().eq('id', id).single();
     return Task.fromJson(row);
+  }
+
+  Future<void> addTask(Task task) async {
+    final data = task.toJson()..remove('id');
+    await _client.from('tasks').insert(data);
+  }
+
+  Future<void> updateTaskStatus(String id, String status) async {
+    await _client.from('tasks').update({'status': status}).eq('id', id);
   }
 
   Future<Task> createTask(Task task) async {
