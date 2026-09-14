@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:refactored_pancake/screens/home_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:refactored_pancake/screens/assistant_screen.dart';
+import 'package:refactored_pancake/screens/home_screen.dart';
+import 'package:refactored_pancake/screens/medications_screen.dart';
+import 'package:refactored_pancake/screens/schedule_screen.dart';
+import 'package:refactored_pancake/screens/tasks_screen.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
@@ -16,8 +21,22 @@ void main() async {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  static const List<Widget> _screens = [
+    HomeScreen(),
+    ScheduleScreen(),
+    MedicationsScreen(),
+    TasksScreen(),
+  ];
+
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +46,54 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: HomeScreen()),
+      home: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: _screens[_selectedIndex],
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) => const AssistantScreen(),
+                  ),
+                );
+              },
+              child: const Icon(Icons.auto_awesome),
+            ),
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.calendar_month_outlined),
+                  selectedIcon: Icon(Icons.calendar_month),
+                  label: 'Schedule',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.medication_outlined),
+                  selectedIcon: Icon(Icons.medication),
+                  label: 'Medications',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.check_box_outlined),
+                  selectedIcon: Icon(Icons.check_box),
+                  label: 'Tasks',
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
