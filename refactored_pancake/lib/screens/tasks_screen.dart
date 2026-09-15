@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:refactored_pancake/models/pill_model.dart';
+import 'package:refactored_pancake/models/visit_model.dart';
 import 'package:refactored_pancake/screens/add_pill_screen.dart';
 import 'package:refactored_pancake/screens/add_visit_screen.dart';
 import 'package:refactored_pancake/services/pill_service.dart';
@@ -17,6 +19,20 @@ class _TasksScreenState extends State<TasksScreen> {
   String _selectedFilter = 'all';
   final PillService _pillService = PillService();
   final VisitService _visitService = VisitService();
+  final Set<PillModel> _takenPills = <PillModel>{};
+  final Set<VisitModel> _handledVisits = <VisitModel>{};
+
+  void _onMarkAsTaken(PillModel pill) {
+    setState(() {
+      _takenPills.add(pill);
+    });
+  }
+
+  void _onMarkAsHandled(VisitModel visit) {
+    setState(() {
+      _handledVisits.add(visit);
+    });
+  }
 
   void _navigateToAddPill() async {
     final result = await Navigator.of(context).push<bool>(
@@ -96,8 +112,8 @@ class _TasksScreenState extends State<TasksScreen> {
                           dosage: pill.dosage,
                           tablets: pill.tablets,
                           time: pill.time,
-                          isTaken: pill.isTaken,
-                          onMarkAsTaken: () {},
+                          isTaken: pill.isTaken || _takenPills.contains(pill),
+                          onMarkAsTaken: () => _onMarkAsTaken(pill),
                         ),
                       ),
                     ),
@@ -111,8 +127,9 @@ class _TasksScreenState extends State<TasksScreen> {
                           day: visit.day,
                           month: visit.month,
                           time: visit.time,
-                          isHandled: visit.isHandled,
-                          onMarkAsHandled: () {},
+                          isHandled:
+                              visit.isHandled || _handledVisits.contains(visit),
+                          onMarkAsHandled: () => _onMarkAsHandled(visit),
                         ),
                       ),
                     ),
