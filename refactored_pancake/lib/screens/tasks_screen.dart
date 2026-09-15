@@ -22,39 +22,44 @@ class _TasksScreenState extends State<TasksScreen> {
     final visits = _visitService.getVisits();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Tasks')),
+      appBar: AppBar(
+        title: const Text('Tasks'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: SegmentedButton(
+              selected: {_selectedFilter},
+              onSelectionChanged: (newSelection) {
+                setState(() {
+                  _selectedFilter = newSelection.first;
+                });
+              },
+              segments: const [
+                ButtonSegment(
+                  value: 'all',
+                  label: Text('All'),
+                  icon: Icon(Icons.list),
+                ),
+                ButtonSegment(
+                  value: 'pills',
+                  label: Text('Pills'),
+                  icon: Icon(Icons.medication),
+                ),
+                ButtonSegment(
+                  value: 'visits',
+                  label: Text('Visits'),
+                  icon: Icon(Icons.calendar_today),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Column(
           children: [
-            Center(
-              child: SegmentedButton(
-                selected: {_selectedFilter},
-                onSelectionChanged: (newSelection) {
-                  setState(() {
-                    _selectedFilter = newSelection.first;
-                  });
-                },
-                segments: const [
-                  ButtonSegment(
-                    value: 'all',
-                    label: Text('All'),
-                    icon: Icon(Icons.list),
-                  ),
-                  ButtonSegment(
-                    value: 'pills',
-                    label: Text('Pills'),
-                    icon: Icon(Icons.medication),
-                  ),
-                  ButtonSegment(
-                    value: 'visits',
-                    label: Text('Visits'),
-                    icon: Icon(Icons.calendar_today),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
             Expanded(
               child: ListView(
                 children: [
