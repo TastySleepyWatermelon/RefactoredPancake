@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:refactored_pancake/widgets/pill_widget.dart';
+import 'package:refactored_pancake/widgets/visit_widget.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -46,6 +47,33 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ],
               ),
+            ),
+
+            PillWidget(
+              dosage: "500mg",
+              medicationName: "Paracetamol",
+              tablets: 2,
+              time: "08:00 AM",
+              isTaken: true,
+              onMarkAsTaken: () {},
+            ),
+            PillWidget(
+              dosage: "500mg",
+              medicationName: "Paracetamol",
+              tablets: 2,
+              time: "08:00 AM",
+              isTaken: false,
+              onMarkAsTaken: () {},
+            ),
+
+            VisitWidget(
+              visitName: "General Checkup",
+              doctorName: "Dr. Smith",
+              day: "12",
+              month: "Oct",
+              time: "10:00 AM",
+              isHandled: false,
+              onMarkAsHandled: () {},
             ),
           ],
         ),

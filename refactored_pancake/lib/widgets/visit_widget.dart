@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-class PillWidget extends StatelessWidget {
-  final String medicationName;
-  final String dosage;
-  final int tablets;
+class VisitWidget extends StatelessWidget {
+  final String visitName;
+  final String doctorName;
+  final String day;
+  final String month;
   final String time;
-  final bool isTaken;
-  final VoidCallback? onMarkAsTaken;
+  final bool isHandled;
+  final VoidCallback? onMarkAsHandled;
 
-  const PillWidget({
+  const VisitWidget({
     super.key,
-    required this.medicationName,
-    required this.dosage,
-    required this.tablets,
+    required this.visitName,
+    required this.doctorName,
+    required this.day,
+    required this.month,
     required this.time,
-    required this.isTaken,
-    this.onMarkAsTaken,
+    required this.isHandled,
+    this.onMarkAsHandled,
   });
 
   @override
@@ -36,10 +38,27 @@ class PillWidget extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(
-                    Icons.medication,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    size: 28,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        day,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.bold,
+                          height: 1.0,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        month,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w700,
+                          height: 1.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -50,13 +69,12 @@ class PillWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        medicationName,
+                        visitName,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
-
                       Text(
-                        '$dosage • $tablets ${tablets == 1 ? "tablet" : "tablets"}',
+                        doctorName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -64,7 +82,6 @@ class PillWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 Text(
                   time,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -73,12 +90,12 @@ class PillWidget extends StatelessWidget {
                 ),
               ],
             ),
-
+            
             const SizedBox(height: 8),
-
-            if (isTaken)
+            
+            if (isHandled)
               Text(
-                'Taken and confirmed by Mike',
+                'Handled and confirmed by Mike',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
@@ -88,8 +105,8 @@ class PillWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: FilledButton.tonal(
-                  onPressed: onMarkAsTaken,
-                  child: const Text('Mark as taken'),
+                  onPressed: onMarkAsHandled,
+                  child: const Text('Mark as handled'),
                 ),
               ),
           ],
