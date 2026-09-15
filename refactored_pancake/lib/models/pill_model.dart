@@ -1,12 +1,12 @@
 class PillModel {
-  final String medicationName;
+  final String pillName;
   final String dosage;
   final int tablets;
   final String time;
   final bool isTaken;
 
   const PillModel({
-    required this.medicationName,
+    required this.pillName,
     required this.dosage,
     required this.tablets,
     required this.time,
@@ -14,14 +14,14 @@ class PillModel {
   });
 
   PillModel copyWith({
-    String? medicationName,
+    String? pillName,
     String? dosage,
     int? tablets,
     String? time,
     bool? isTaken,
   }) {
     return PillModel(
-      medicationName: medicationName ?? this.medicationName,
+      pillName: pillName ?? this.pillName,
       dosage: dosage ?? this.dosage,
       tablets: tablets ?? this.tablets,
       time: time ?? this.time,

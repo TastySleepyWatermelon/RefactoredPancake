@@ -13,14 +13,14 @@ class AddPillScreen extends StatefulWidget {
 
 class _AddPillScreenState extends State<AddPillScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _medicationNameController = TextEditingController();
+  final _pillNameController = TextEditingController();
   final _dosageController = TextEditingController();
   final _tabletsController = TextEditingController();
   final _timeController = TextEditingController();
 
   @override
   void dispose() {
-    _medicationNameController.dispose();
+    _pillNameController.dispose();
     _dosageController.dispose();
     _tabletsController.dispose();
     _timeController.dispose();
@@ -30,7 +30,7 @@ class _AddPillScreenState extends State<AddPillScreen> {
   void _addPill() {
     if (_formKey.currentState!.validate()) {
       final pill = PillModel(
-        medicationName: _medicationNameController.text,
+        pillName: _pillNameController.text,
         dosage: _dosageController.text,
         tablets: int.parse(_tabletsController.text),
         time: _timeController.text,
@@ -62,15 +62,15 @@ class _AddPillScreenState extends State<AddPillScreen> {
                       spacing: 16,
                       children: [
                         TextFormField(
-                          controller: _medicationNameController,
+                          controller: _pillNameController,
                           decoration: const InputDecoration(
-                            labelText: 'Medication Name',
+                            labelText: 'Pill Name',
                             border: OutlineInputBorder(),
                             prefixIcon: Icon(Icons.medication),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter a medication name';
+                              return 'Please enter a pill name';
                             }
                             return null;
                           },

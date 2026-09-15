@@ -108,7 +108,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       (pill) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: PillWidget(
-                          medicationName: pill.medicationName,
+                          pillName: pill.pillName,
                           dosage: pill.dosage,
                           tablets: pill.tablets,
                           time: pill.time,
@@ -154,7 +154,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                     leading: const Icon(Icons.medication),
                     title: const Text('Add Pill'),
-                    subtitle: const Text('Add a new prescribed medication'),
+                    subtitle: const Text('Add a new prescribed pill'),
                     onTap: () {
                       Navigator.of(context).pop();
                       _navigateToAddPill();

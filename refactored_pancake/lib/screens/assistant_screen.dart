@@ -77,10 +77,10 @@ class _AssistantScreenState extends State<AssistantScreen> {
     final visits = _visitService.getVisits();
 
     final pillsContext = pills.isEmpty
-        ? 'No medications recorded.'
+        ? 'No pills recorded.'
         : pills
             .map((p) =>
-                '- ${p.medicationName} (${p.dosage}, ${p.tablets} tablet(s)) at ${p.time}. Status: ${p.isTaken ? "Taken" : "Not taken"}')
+                '- ${p.pillName} (${p.dosage}, ${p.tablets} tablet(s)) at ${p.time}. Status: ${p.isTaken ? "Taken" : "Not taken"}')
             .join('\n');
 
     final visitsContext = visits.isEmpty
@@ -95,13 +95,15 @@ You are a helpful healthcare assistant named "Sanad". The user is asking about: 
 
 Here are all the pills and visits for additional context:
 
-All Pills / Medications:
+All Prescribed Pills:
 $pillsContext
 
 All Scheduled Visits:
 $visitsContext
 
-Important: You can ONLY help with what you KNOW only from this context and these specific items. If the user asks about anything outside of this context or what you know, state clearly that you can only help with their scheduled pills and visits.
+Important: 
+You can ONLY help with what you KNOW only from this context and these specific items. 
+If the user asks about anything outside of this context or what you know, state clearly that you can only help with their prescribed pills and scheduled visits.
 ''';
 
     try {

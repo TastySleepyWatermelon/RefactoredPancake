@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PillWidget extends StatelessWidget {
-  final String medicationName;
+  final String pillName;
   final String dosage;
   final int tablets;
   final String time;
@@ -10,7 +10,7 @@ class PillWidget extends StatelessWidget {
 
   const PillWidget({
     super.key,
-    required this.medicationName,
+    required this.pillName,
     required this.dosage,
     required this.tablets,
     required this.time,
@@ -50,7 +50,7 @@ class PillWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        medicationName,
+                        pillName,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
