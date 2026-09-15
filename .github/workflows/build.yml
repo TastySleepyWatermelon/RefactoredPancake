@@ -17,13 +17,13 @@ jobs:
           channel: stable
 
       - name: Create .env for CI
-        working-directory: refactored_pancake
+        working-directory: rifq
         run: touch .env
 
       - name: Get dependencies
-        working-directory: refactored_pancake
+        working-directory: rifq
         run: flutter pub get
 
       - name: Build APK
-        working-directory: refactored_pancake
+        working-directory: rifq
         run: flutter build apk --release
