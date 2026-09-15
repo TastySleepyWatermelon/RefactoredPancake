@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:refactored_pancake/services/pill_service.dart';
+import 'package:refactored_pancake/services/visit_service.dart';
 import 'package:refactored_pancake/widgets/pill_widget.dart';
 import 'package:refactored_pancake/widgets/visit_widget.dart';
 
@@ -11,15 +13,19 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   String _selectedFilter = 'all';
+  final PillService _pillService = PillService();
+  final VisitService _visitService = VisitService();
 
   @override
   Widget build(BuildContext context) {
+    final pills = _pillService.getPills();
+    final visits = _visitService.getVisits();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Tasks')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Column(
-          spacing: 16,
           children: [
             Center(
               child: SegmentedButton(
@@ -33,7 +39,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ButtonSegment(
                     value: 'all',
                     label: Text('All'),
-                    icon: Icon(Icons.list), // M3 encourages icons in segments
+                    icon: Icon(Icons.list),
                   ),
                   ButtonSegment(
                     value: 'pills',
@@ -48,32 +54,41 @@ class _TasksScreenState extends State<TasksScreen> {
                 ],
               ),
             ),
-
-            PillWidget(
-              dosage: "500mg",
-              medicationName: "Paracetamol",
-              tablets: 2,
-              time: "08:00 AM",
-              isTaken: true,
-              onMarkAsTaken: () {},
-            ),
-            PillWidget(
-              dosage: "500mg",
-              medicationName: "Paracetamol",
-              tablets: 2,
-              time: "08:00 AM",
-              isTaken: false,
-              onMarkAsTaken: () {},
-            ),
-
-            VisitWidget(
-              visitName: "General Checkup",
-              doctorName: "Dr. Smith",
-              day: "12",
-              month: "Oct",
-              time: "10:00 AM",
-              isHandled: false,
-              onMarkAsHandled: () {},
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView(
+                children: [
+                  if (_selectedFilter == 'all' || _selectedFilter == 'pills')
+                    ...pills.map(
+                      (pill) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: PillWidget(
+                          medicationName: pill.medicationName,
+                          dosage: pill.dosage,
+                          tablets: pill.tablets,
+                          time: pill.time,
+                          isTaken: pill.isTaken,
+                          onMarkAsTaken: () {},
+                        ),
+                      ),
+                    ),
+                  if (_selectedFilter == 'all' || _selectedFilter == 'visits')
+                    ...visits.map(
+                      (visit) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: VisitWidget(
+                          visitName: visit.visitName,
+                          doctorName: visit.doctorName,
+                          day: visit.day,
+                          month: visit.month,
+                          time: visit.time,
+                          isHandled: visit.isHandled,
+                          onMarkAsHandled: () {},
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
         ),
