@@ -38,27 +38,10 @@ class VisitWidget extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        day,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          fontWeight: FontWeight.bold,
-                          height: 1.0,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        month,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          fontWeight: FontWeight.w700,
-                          height: 1.0,
-                        ),
-                      ),
-                    ],
+                  child: Icon(
+                    Icons.calendar_today,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    size: 28,
                   ),
                 ),
 
@@ -74,7 +57,7 @@ class VisitWidget extends StatelessWidget {
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        doctorName,
+                        '$doctorName • $day $month',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
