@@ -16,6 +16,10 @@ jobs:
         with:
           channel: stable
 
+      - name: Create .env for CI
+        working-directory: refactored_pancake
+        run: touch .env
+
       - name: Get dependencies
         working-directory: refactored_pancake
         run: flutter pub get
