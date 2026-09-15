@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-/// Talks to the Azure AI Foundry "Responses" endpoint.
+/// Talks to the Azure AI Foundry Responses API (`/openai/v1/responses`).
 ///
-/// Credentials are read from the `.env` file (see `.env.example`) via
-/// `flutter_dotenv` rather than being hard-coded here.
+/// Credentials are read from the `.env` file via `flutter_dotenv` rather
+/// than being hard-coded here.
 class AiService {
   AiService({http.Client? client}) : _client = client ?? http.Client();
 
@@ -28,13 +28,22 @@ class AiService {
     return value;
   }
 
-  String get _defaultModel => dotenv.env['AZURE_AI_MODEL'] ?? 'gpt-4o-mini';
+  String get _model => dotenv.env['AZURE_AI_MODEL'] ?? 'gpt-4o-mini';
 
-  /// Sends [prompt] to the model and returns the generated text.
-  ///
-  /// Pass [model] to override the deployment configured via
-  /// `AZURE_AI_MODEL` in `.env`.
-  Future<String> generateText(String prompt, {String? model}) async {
+  /// Sends [message] to the model, grounded by [systemPrompt] and preceded
+  /// by [history] (each entry a `{'role': 'user'|'assistant', 'content': ...}`
+  /// map), and returns the assistant's reply text.
+  Future<String> sendMessage({
+    required String systemPrompt,
+    required List<Map<String, String>> history,
+    required String message,
+  }) async {
+    final input = [
+      {'role': 'system', 'content': systemPrompt},
+      ...history,
+      {'role': 'user', 'content': message},
+    ];
+
     final response = await _client.post(
       Uri.parse(_endpoint),
       headers: {
@@ -42,8 +51,8 @@ class AiService {
         'api-key': _apiKey,
       },
       body: jsonEncode({
-        'model': model ?? _defaultModel,
-        'input': prompt,
+        'model': _model,
+        'input': input,
       }),
     );
 
@@ -57,30 +66,27 @@ class AiService {
     return _extractOutputText(decoded);
   }
 
+  /// Walks the Responses API `output` array to find the assistant's text.
+  ///
+  /// The array can contain other item types (e.g. tool calls); the reply
+  /// lives in the item where `type == "message"`, inside its `content`
+  /// array, in the part where `type == "output_text"`.
   String _extractOutputText(Map<String, dynamic> json) {
-    // Convenience field some Responses API implementations include.
-    final direct = json['output_text'];
-    if (direct is String && direct.isNotEmpty) {
-      return direct;
-    }
-
     final output = json['output'];
     if (output is List) {
-      final buffer = StringBuffer();
       for (final item in output) {
-        if (item is Map<String, dynamic> && item['content'] is List) {
-          for (final content in item['content'] as List) {
-            if (content is Map<String, dynamic>) {
-              final text = content['text'];
-              if (text is String) {
-                buffer.write(text);
+        if (item is Map<String, dynamic> && item['type'] == 'message') {
+          final content = item['content'];
+          if (content is List) {
+            for (final part in content) {
+              if (part is Map<String, dynamic> &&
+                  part['type'] == 'output_text' &&
+                  part['text'] is String) {
+                return part['text'] as String;
               }
             }
           }
         }
-      }
-      if (buffer.isNotEmpty) {
-        return buffer.toString();
       }
     }
 

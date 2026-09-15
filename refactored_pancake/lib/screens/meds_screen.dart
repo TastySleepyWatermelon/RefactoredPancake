@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../data/colors.dart' as app_colors;
 import '../models/medication.dart';
 import '../services/database_service.dart';
 
@@ -20,6 +19,8 @@ class _MedsScreenState extends State<MedsScreen> {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
   ];
+
+  ColorScheme get _colors => Theme.of(context).colorScheme;
 
   @override
   void initState() {
@@ -56,7 +57,7 @@ class _MedsScreenState extends State<MedsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: app_colors.Colors.background,
+      backgroundColor: _colors.surface,
       body: SafeArea(
         child: FutureBuilder<List<Medication>>(
           future: _medicationsFuture,
@@ -68,7 +69,7 @@ class _MedsScreenState extends State<MedsScreen> {
               return Center(
                 child: Text(
                   'Could not load medications',
-                  style: GoogleFonts.inter(color: app_colors.Colors.textMuted),
+                  style: GoogleFonts.inter(color: _colors.onSurfaceVariant),
                 ),
               );
             }
@@ -93,7 +94,7 @@ class _MedsScreenState extends State<MedsScreen> {
                           child: Text(
                             'No medications scheduled',
                             style: GoogleFonts.inter(
-                              color: app_colors.Colors.textMuted,
+                              color: _colors.onSurfaceVariant,
                             ),
                           ),
                         )
@@ -141,7 +142,7 @@ class _MedsScreenState extends State<MedsScreen> {
                   style: GoogleFonts.inter(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: app_colors.Colors.textPrimary,
+                    color: _colors.onSurface,
                   ),
                 ),
                 if (dateLabel != null) ...[
@@ -150,7 +151,7 @@ class _MedsScreenState extends State<MedsScreen> {
                     dateLabel,
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: app_colors.Colors.textMuted,
+                      color: _colors.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -177,14 +178,14 @@ class _MedsScreenState extends State<MedsScreen> {
         ],
       ),
       child: Material(
-        color: app_colors.Colors.accentGreen,
+        color: _colors.primary,
         shape: const CircleBorder(),
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: _openAddMedicationSheet,
-          child: const Padding(
-            padding: EdgeInsets.all(10),
-            child: Icon(Icons.add, color: Colors.white, size: 22),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Icon(Icons.add, color: _colors.onPrimary, size: 22),
           ),
         ),
       ),
@@ -205,7 +206,7 @@ class _MedsScreenState extends State<MedsScreen> {
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.0,
-                color: app_colors.Colors.textMuted,
+                color: _colors.onSurfaceVariant,
               ),
             ),
           ),
@@ -223,11 +224,9 @@ class _MedsScreenState extends State<MedsScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: app_colors.Colors.card,
+        color: _colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: missed
-            ? Border.all(color: app_colors.Colors.lisa, width: 1.2)
-            : null,
+        border: missed ? Border.all(color: _colors.error, width: 1.2) : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -254,7 +253,7 @@ class _MedsScreenState extends State<MedsScreen> {
                       style: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: app_colors.Colors.textPrimary,
+                        color: _colors.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -262,7 +261,7 @@ class _MedsScreenState extends State<MedsScreen> {
                       '${medication.dosage} • ${medication.form}',
                       style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: app_colors.Colors.textMuted,
+                        color: _colors.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -286,7 +285,7 @@ class _MedsScreenState extends State<MedsScreen> {
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: app_colors.Colors.textPrimary,
+                      color: _colors.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -294,8 +293,8 @@ class _MedsScreenState extends State<MedsScreen> {
                     ElevatedButton(
                       onPressed: () => _markAsTaken(medication),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: app_colors.Colors.accentGreen,
-                        foregroundColor: Colors.white,
+                        backgroundColor: _colors.primary,
+                        foregroundColor: _colors.onPrimary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
                           vertical: 8,
@@ -328,15 +327,14 @@ class _MedsScreenState extends State<MedsScreen> {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Icon(Icons.warning_amber_rounded,
-              size: 16, color: app_colors.Colors.lisa),
+          Icon(Icons.warning_amber_rounded, size: 16, color: _colors.error),
           const SizedBox(width: 6),
           Text(
             'Missed dose yesterday',
             style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: app_colors.Colors.lisa,
+              color: _colors.error,
             ),
           ),
         ],
@@ -375,13 +373,13 @@ class _MedsScreenState extends State<MedsScreen> {
   Color _statusColor(MedicationStatus status) {
     switch (status) {
       case MedicationStatus.taken:
-        return app_colors.Colors.accentGreen;
+        return _colors.primary;
       case MedicationStatus.dueSoon:
-        return app_colors.Colors.mike;
+        return _colors.tertiary;
       case MedicationStatus.dueLater:
-        return app_colors.Colors.textMuted;
+        return _colors.onSurfaceVariant;
       case MedicationStatus.missedYesterday:
-        return app_colors.Colors.lisa;
+        return _colors.error;
     }
   }
 
@@ -404,9 +402,9 @@ class _MedsScreenState extends State<MedsScreen> {
     return BottomNavigationBar(
       currentIndex: 2,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: app_colors.Colors.card,
-      selectedItemColor: app_colors.Colors.accentGreen,
-      unselectedItemColor: app_colors.Colors.textMuted,
+      backgroundColor: _colors.surfaceContainerHighest,
+      selectedItemColor: _colors.primary,
+      unselectedItemColor: _colors.onSurfaceVariant,
       selectedLabelStyle: GoogleFonts.inter(
           fontSize: 11, fontWeight: FontWeight.w600),
       unselectedLabelStyle: GoogleFonts.inter(fontSize: 11),
@@ -444,6 +442,8 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
   DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
   bool _saving = false;
+
+  ColorScheme get _colors => Theme.of(context).colorScheme;
 
   @override
   void dispose() {
@@ -504,9 +504,9 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
       ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-        decoration: const BoxDecoration(
-          color: app_colors.Colors.card,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: _colors.surfaceContainerHighest,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: SingleChildScrollView(
           child: Form(
@@ -520,7 +520,7 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: app_colors.Colors.textPrimary,
+                    color: _colors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -591,20 +591,20 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
                   child: ElevatedButton(
                     onPressed: _saving ? null : _save,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: app_colors.Colors.accentGreen,
-                      foregroundColor: Colors.white,
+                      backgroundColor: _colors.primary,
+                      foregroundColor: _colors.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: _saving
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: _colors.onPrimary,
                             ),
                           )
                         : Text(
