@@ -1,4 +1,4 @@
-import 'package:refactored_pancake/models/pill_model.dart';
+import 'package:rifq/models/pill_model.dart';
 
 class PillService {
   final List<PillModel> _pills = [

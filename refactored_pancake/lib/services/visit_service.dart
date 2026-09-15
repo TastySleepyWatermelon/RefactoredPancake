@@ -1,4 +1,4 @@
-import 'package:refactored_pancake/models/visit_model.dart';
+import 'package:rifq/models/visit_model.dart';
 
 class VisitService {
   final List<VisitModel> _visits = [

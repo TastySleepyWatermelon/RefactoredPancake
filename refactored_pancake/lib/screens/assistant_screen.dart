@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:refactored_pancake/services/ai_service.dart';
-import 'package:refactored_pancake/services/pill_service.dart';
-import 'package:refactored_pancake/services/visit_service.dart';
+import 'package:rifq/services/ai_service.dart';
+import 'package:rifq/services/pill_service.dart';
+import 'package:rifq/services/visit_service.dart';
 
 class ChatMessage {
   final String text;

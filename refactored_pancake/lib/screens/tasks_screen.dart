@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:refactored_pancake/models/pill_model.dart';
-import 'package:refactored_pancake/models/visit_model.dart';
-import 'package:refactored_pancake/screens/add_pill_screen.dart';
-import 'package:refactored_pancake/screens/add_visit_screen.dart';
-import 'package:refactored_pancake/services/pill_service.dart';
-import 'package:refactored_pancake/services/visit_service.dart';
-import 'package:refactored_pancake/widgets/pill_widget.dart';
-import 'package:refactored_pancake/widgets/visit_widget.dart';
+import 'package:rifq/models/pill_model.dart';
+import 'package:rifq/models/visit_model.dart';
+import 'package:rifq/screens/add_pill_screen.dart';
+import 'package:rifq/screens/add_visit_screen.dart';
+import 'package:rifq/services/pill_service.dart';
+import 'package:rifq/services/visit_service.dart';
+import 'package:rifq/widgets/pill_widget.dart';
+import 'package:rifq/widgets/visit_widget.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:refactored_pancake/screens/assistant_screen.dart';
-import 'package:refactored_pancake/screens/home_screen.dart';
-import 'package:refactored_pancake/screens/schedule_screen.dart';
-import 'package:refactored_pancake/screens/tasks_screen.dart';
+import 'package:rifq/screens/assistant_screen.dart';
+import 'package:rifq/screens/home_screen.dart';
+import 'package:rifq/screens/schedule_screen.dart';
+import 'package:rifq/screens/tasks_screen.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');

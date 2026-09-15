@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:refactored_pancake/models/pill_model.dart';
-import 'package:refactored_pancake/services/pill_service.dart';
+import 'package:rifq/models/pill_model.dart';
+import 'package:rifq/services/pill_service.dart';
 
 class AddPillScreen extends StatefulWidget {
   final PillService pillService;

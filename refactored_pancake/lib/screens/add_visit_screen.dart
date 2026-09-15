@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:refactored_pancake/models/visit_model.dart';
-import 'package:refactored_pancake/services/visit_service.dart';
+import 'package:rifq/models/visit_model.dart';
+import 'package:rifq/services/visit_service.dart';
 
 class AddVisitScreen extends StatefulWidget {
   final VisitService visitService;
