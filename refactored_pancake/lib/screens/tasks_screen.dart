@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:refactored_pancake/screens/add_pill_screen.dart';
+import 'package:refactored_pancake/screens/add_visit_screen.dart';
 import 'package:refactored_pancake/services/pill_service.dart';
 import 'package:refactored_pancake/services/visit_service.dart';
 import 'package:refactored_pancake/widgets/pill_widget.dart';
@@ -16,6 +18,28 @@ class _TasksScreenState extends State<TasksScreen> {
   final PillService _pillService = PillService();
   final VisitService _visitService = VisitService();
 
+  void _navigateToAddPill() async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => AddPillScreen(pillService: _pillService),
+      ),
+    );
+    if (result == true) {
+      setState(() {});
+    }
+  }
+
+  void _navigateToAddVisit() async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => AddVisitScreen(visitService: _visitService),
+      ),
+    );
+    if (result == true) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final pills = _pillService.getPills();
@@ -25,9 +49,9 @@ class _TasksScreenState extends State<TasksScreen> {
       appBar: AppBar(
         title: const Text('Tasks'),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
+          preferredSize: const Size.fromHeight(64),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 16),
             child: SegmentedButton(
               selected: {_selectedFilter},
               onSelectionChanged: (newSelection) {
@@ -99,7 +123,43 @@ class _TasksScreenState extends State<TasksScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    leading: const Icon(Icons.medication),
+                    title: const Text('Add Pill'),
+                    subtitle: const Text('Add a new prescribed medication'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _navigateToAddPill();
+                    },
+                  ),
+                  ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    leading: const Icon(Icons.location_on),
+                    title: const Text('Add Visit'),
+                    subtitle: const Text('Add a new scheduled visit'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _navigateToAddVisit();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
     );
