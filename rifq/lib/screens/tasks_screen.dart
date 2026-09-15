@@ -34,10 +34,12 @@ class _TasksScreenState extends State<TasksScreen> {
     });
   }
 
-  void _navigateToAddPill() async {
-    final result = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (context) => AddPillScreen(pillService: _pillService),
+  void _openAddPillDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AddPillScreen(
+        pillService: _pillService,
+        isDialog: true,
       ),
     );
     if (result == true) {
@@ -45,10 +47,12 @@ class _TasksScreenState extends State<TasksScreen> {
     }
   }
 
-  void _navigateToAddVisit() async {
-    final result = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (context) => AddVisitScreen(visitService: _visitService),
+  void _openAddVisitDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AddVisitScreen(
+        visitService: _visitService,
+        isDialog: true,
       ),
     );
     if (result == true) {
@@ -159,7 +163,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     subtitle: const Text('Add a new prescribed pill'),
                     onTap: () {
                       Navigator.of(context).pop();
-                      _navigateToAddPill();
+                      _openAddPillDialog();
                     },
                   ),
                   ListTile(
@@ -171,7 +175,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     subtitle: const Text('Add a new scheduled visit'),
                     onTap: () {
                       Navigator.of(context).pop();
-                      _navigateToAddVisit();
+                      _openAddVisitDialog();
                     },
                   ),
                 ],
