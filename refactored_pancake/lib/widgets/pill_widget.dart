@@ -6,6 +6,7 @@ class PillWidget extends StatelessWidget {
   final int tablets;
   final String time;
   final bool isTaken;
+  final String markedByName;
   final VoidCallback? onMarkAsTaken;
 
   const PillWidget({
@@ -15,6 +16,7 @@ class PillWidget extends StatelessWidget {
     required this.tablets,
     required this.time,
     required this.isTaken,
+    required this.markedByName,
     this.onMarkAsTaken,
   });
 
@@ -78,7 +80,7 @@ class PillWidget extends StatelessWidget {
 
             if (isTaken)
               Text(
-                'Taken and confirmed by Mike',
+                'Taken and confirmed by $markedByName',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,

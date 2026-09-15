@@ -9,6 +9,7 @@ class VisitService {
       month: 'SEP',
       time: '10:00 AM',
       isHandled: true,
+      markedByName: 'John',
     ),
     const VisitModel(
       visitName: 'Dental Cleaning',
@@ -16,6 +17,8 @@ class VisitService {
       day: '28',
       month: 'SEP',
       time: '2:30 PM',
+      isHandled: true,
+      markedByName: 'Alice',
     ),
     const VisitModel(
       visitName: 'Eye Exam',
@@ -23,6 +26,8 @@ class VisitService {
       day: '05',
       month: 'OCT',
       time: '11:00 AM',
+      isHandled: true,
+      markedByName: 'Alice',
     ),
     const VisitModel(
       visitName: 'Cardiology Follow-up',
@@ -30,6 +35,8 @@ class VisitService {
       day: '12',
       month: 'OCT',
       time: '9:00 AM',
+      isHandled: true,
+      markedByName: 'John',
     ),
     const VisitModel(
       visitName: 'Lab Work',
@@ -38,6 +45,7 @@ class VisitService {
       month: 'OCT',
       time: '7:30 AM',
       isHandled: true,
+      markedByName: 'John',
     ),
   ];
 

@@ -37,6 +37,8 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
         day: _dayController.text,
         month: _monthController.text.toUpperCase(),
         time: _timeController.text,
+        isHandled: false,
+        markedByName: 'John',
       );
       widget.visitService.addVisit(visit);
       Navigator.of(context).pop(true);

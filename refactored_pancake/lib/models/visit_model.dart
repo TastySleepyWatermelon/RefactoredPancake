@@ -5,6 +5,7 @@ class VisitModel {
   final String month;
   final String time;
   final bool isHandled;
+  final String markedByName;
 
   const VisitModel({
     required this.visitName,
@@ -12,7 +13,8 @@ class VisitModel {
     required this.day,
     required this.month,
     required this.time,
-    this.isHandled = false,
+    required this.isHandled,
+    required this.markedByName,
   });
 
   VisitModel copyWith({
@@ -22,6 +24,7 @@ class VisitModel {
     String? month,
     String? time,
     bool? isHandled,
+    String? markedByName,
   }) {
     return VisitModel(
       visitName: visitName ?? this.visitName,
@@ -30,6 +33,7 @@ class VisitModel {
       month: month ?? this.month,
       time: time ?? this.time,
       isHandled: isHandled ?? this.isHandled,
+      markedByName: markedByName ?? this.markedByName,
     );
   }
 }

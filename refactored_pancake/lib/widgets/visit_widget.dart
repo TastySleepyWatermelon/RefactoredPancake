@@ -7,6 +7,7 @@ class VisitWidget extends StatelessWidget {
   final String month;
   final String time;
   final bool isHandled;
+  final String markedByName;
   final VoidCallback? onMarkAsHandled;
 
   const VisitWidget({
@@ -17,6 +18,7 @@ class VisitWidget extends StatelessWidget {
     required this.month,
     required this.time,
     required this.isHandled,
+    required this.markedByName,
     this.onMarkAsHandled,
   });
 
@@ -78,7 +80,7 @@ class VisitWidget extends StatelessWidget {
             
             if (isHandled)
               Text(
-                'Handled and confirmed by Mike',
+                'Handled and confirmed by $markedByName',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,

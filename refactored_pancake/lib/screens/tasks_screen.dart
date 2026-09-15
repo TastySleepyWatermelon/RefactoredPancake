@@ -113,6 +113,7 @@ class _TasksScreenState extends State<TasksScreen> {
                           tablets: pill.tablets,
                           time: pill.time,
                           isTaken: pill.isTaken || _takenPills.contains(pill),
+                          markedByName: pill.markedByName,
                           onMarkAsTaken: () => _onMarkAsTaken(pill),
                         ),
                       ),
@@ -129,6 +130,7 @@ class _TasksScreenState extends State<TasksScreen> {
                           time: visit.time,
                           isHandled:
                               visit.isHandled || _handledVisits.contains(visit),
+                          markedByName: visit.markedByName,
                           onMarkAsHandled: () => _onMarkAsHandled(visit),
                         ),
                       ),

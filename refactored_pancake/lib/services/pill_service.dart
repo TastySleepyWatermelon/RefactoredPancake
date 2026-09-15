@@ -8,6 +8,7 @@ class PillService {
       tablets: 1,
       time: '8:00 AM',
       isTaken: true,
+      markedByName: 'Sarah',
     ),
     const PillModel(
       pillName: 'Metformin',
@@ -15,18 +16,23 @@ class PillService {
       tablets: 2,
       time: '8:00 AM',
       isTaken: true,
+      markedByName: 'Sarah',
     ),
     const PillModel(
       pillName: 'Atorvastatin',
       dosage: '20mg',
       tablets: 1,
       time: '9:00 PM',
+      isTaken: false,
+      markedByName: 'Emily',
     ),
     const PillModel(
       pillName: 'Omeprazole',
       dosage: '20mg',
       tablets: 1,
       time: '7:30 AM',
+      isTaken: false,
+      markedByName: 'Emily',
     ),
     const PillModel(
       pillName: 'Amlodipine',
@@ -34,12 +40,15 @@ class PillService {
       tablets: 1,
       time: '8:00 AM',
       isTaken: true,
+      markedByName: 'Sarah',
     ),
     const PillModel(
       pillName: 'Vitamin D3',
       dosage: '1000 IU',
       tablets: 1,
       time: '12:00 PM',
+      isTaken: false,
+      markedByName: 'Emily',
     ),
   ];
 

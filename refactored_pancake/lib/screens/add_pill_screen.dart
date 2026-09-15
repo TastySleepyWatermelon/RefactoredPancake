@@ -34,6 +34,8 @@ class _AddPillScreenState extends State<AddPillScreen> {
         dosage: _dosageController.text,
         tablets: int.parse(_tabletsController.text),
         time: _timeController.text,
+        isTaken: false,
+        markedByName: 'Sarah',
       );
       widget.pillService.addPill(pill);
       Navigator.of(context).pop(true);
