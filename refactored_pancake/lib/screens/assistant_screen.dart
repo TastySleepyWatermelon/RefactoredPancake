@@ -91,7 +91,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
             .join('\n');
 
     final contextMessage = '''
-You are a helpful healthcare assistant. The user is asking about: "$text"
+You are a helpful healthcare assistant named "Sanad". The user is asking about: "$text"
 
 Here are all the pills and visits for additional context:
 
@@ -251,7 +251,8 @@ Important: You can ONLY help with what you KNOW only from this context and these
                     ),
                   ),
                   const SizedBox(width: 8),
-                  IconButton.filled(
+
+                  IconButton.filledTonal(
                     onPressed: _sendMessage,
                     icon: const Icon(Icons.arrow_upward),
                     style: IconButton.styleFrom(
