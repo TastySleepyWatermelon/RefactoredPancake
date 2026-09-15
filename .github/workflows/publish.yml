@@ -1,0 +1,48 @@
+name: publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Create .env file
+        working-directory: rifq
+        run: |
+          cat << 'EOF' > .env
+          AZURE_AI_ENDPOINT=${{ secrets.AZURE_AI_ENDPOINT }}
+          AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}
+          AZURE_AI_MODEL=${{ secrets.AZURE_AI_MODEL }}
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
+
+      - name: Get dependencies
+        working-directory: rifq
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: rifq
+        run: flutter build apk --release
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: rifq/build/app/outputs/flutter-apk/app-release.apk
