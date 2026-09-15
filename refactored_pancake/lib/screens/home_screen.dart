@@ -6,14 +6,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Text(
-            'Welcome to M3',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          FilledButton(onPressed: () {}, child: Text("Hello")),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Welcome to M3'),
+            FilledButton(onPressed: () {}, child: Text('Hello')),
+          ],
+        ),
       ),
     );
   }

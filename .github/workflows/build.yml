@@ -16,10 +16,6 @@ jobs:
         with:
           channel: stable
 
-      - name: Prepare env file for build assets
-        working-directory: refactored_pancake
-        run: cp .env.example .env
-
       - name: Get dependencies
         working-directory: refactored_pancake
         run: flutter pub get

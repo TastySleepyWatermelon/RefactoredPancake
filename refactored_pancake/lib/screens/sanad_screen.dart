@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../models/care_schedule_item.dart';
-import '../models/caregiver.dart';
-import '../models/medication.dart';
-import '../models/shift.dart';
-import '../models/task.dart';
+import '../models/pill_model.dart';
+import '../models/visit_model.dart';
 import '../services/ai_service.dart';
-import '../services/database_service.dart';
+import '../services/pill_service.dart';
+import '../services/visit_service.dart';
 
 enum _Role { user, assistant, error }
 
@@ -27,7 +23,8 @@ class SanadScreen extends StatefulWidget {
 }
 
 class _SanadScreenState extends State<SanadScreen> {
-  final _databaseService = DatabaseService();
+  final _pillService = PillService();
+  final _visitService = VisitService();
   final _aiService = AiService();
   final _inputController = TextEditingController();
   final _scrollController = ScrollController();
@@ -39,19 +36,19 @@ class _SanadScreenState extends State<SanadScreen> {
   ];
 
   final List<_ChatMessage> _messages = [];
-  bool _loadingContext = true;
   bool _isSending = false;
-  String _dailySummary = 'Gathering today\'s care summary…';
-  String _systemPrompt =
-      'You are Sanad, a helpful family-care coordination assistant inside '
-      'the CareCircle app. Answer briefly and warmly.';
+  late String _dailySummary;
+  late String _systemPrompt;
 
   ColorScheme get _colors => Theme.of(context).colorScheme;
 
   @override
   void initState() {
     super.initState();
-    _loadCareContext();
+    final pills = _pillService.getPills();
+    final visits = _visitService.getVisits();
+    _dailySummary = _buildDailySummary(pills, visits);
+    _systemPrompt = _buildSystemPrompt(pills, visits);
   }
 
   @override
@@ -62,136 +59,52 @@ class _SanadScreenState extends State<SanadScreen> {
     super.dispose();
   }
 
-  /// Fetches [request], returning an empty list if the table is missing or
-  /// the request otherwise fails — one broken data source shouldn't stop
-  /// Sanad from using the rest.
-  Future<List<T>> _fetchOrEmpty<T>(Future<List<T>> Function() request) async {
-    try {
-      return await request();
-    } catch (_) {
-      return <T>[];
-    }
+  String _buildSystemPrompt(List<PillModel> pills, List<VisitModel> visits) {
+    final pillsContext = pills.isEmpty
+        ? 'No medications recorded.'
+        : pills
+            .map((p) =>
+                '- ${p.medicationName} (${p.dosage}, ${p.tablets} tablet(s)) '
+                'at ${p.time}. Status: ${p.isTaken ? "Taken" : "Not taken"}')
+            .join('\n');
+
+    final visitsContext = visits.isEmpty
+        ? 'No visits scheduled.'
+        : visits
+            .map((v) =>
+                '- ${v.visitName} with ${v.doctorName} on ${v.day} '
+                '${v.month} at ${v.time}. '
+                'Status: ${v.isHandled ? "Handled" : "Pending"}')
+            .join('\n');
+
+    return 'You are Sanad, a helpful family-care coordination assistant '
+        'inside the CareCircle app. Answer briefly and warmly.\n\n'
+        'The lists below have already been fetched for you — they are the '
+        'current, real data, not a sample. Always answer directly from '
+        'them; never say you cannot access, fetch, or retrieve the data, '
+        'since it is already provided here.\n\n'
+        'All Pills / Medications:\n$pillsContext\n\n'
+        'All Scheduled Visits:\n$visitsContext';
   }
 
-  Future<void> _loadCareContext() async {
-    final results = await Future.wait([
-      _fetchOrEmpty(_databaseService.getCareSchedule),
-      _fetchOrEmpty(_databaseService.getShifts),
-      _fetchOrEmpty(_databaseService.getCaregivers),
-      _fetchOrEmpty(_databaseService.getMedications),
-      _fetchOrEmpty(_databaseService.getTasks),
-    ]);
-    final todayCareScheduleData = results[0] as List<CareScheduleItem>;
-    final weeklyScheduleData = results[1] as List<Shift>;
-    final caregiversData = results[2] as List<Caregiver>;
-    final medicationsData = results[3] as List<Medication>;
-    final tasksData = results[4] as List<Task>;
-
-    final summary = _buildDailySummary(
-      careSchedule: todayCareScheduleData,
-      shifts: weeklyScheduleData,
-      caregivers: caregiversData,
-      medications: medicationsData,
-      tasks: tasksData,
-    );
-
-    final contextJson = jsonEncode({
-      'today_care_schedule':
-          todayCareScheduleData.map((e) => e.toJson()).toList(),
-      'weekly_schedule': weeklyScheduleData.map((e) => e.toJson()).toList(),
-      'caregivers': caregiversData.map((e) => e.toJson()).toList(),
-      'medications': medicationsData.map((e) => e.toJson()).toList(),
-      'tasks': tasksData.map((e) => e.toJson()).toList(),
-    });
-
-    if (!mounted) return;
-    setState(() {
-      _dailySummary = summary;
-      _systemPrompt =
-          'You are Sanad, a helpful family-care coordination assistant '
-          'inside the CareCircle app. Answer briefly and warmly.\n\n'
-          'The JSON below has already been fetched live from the app\'s '
-          'database for you — it is the current, real data, not a sample. '
-          'Always answer directly from it; never say you cannot access, '
-          'fetch, or retrieve the data, since it is already provided here. '
-          'If a list is empty, that means nothing is currently recorded '
-          'for that category — say so plainly (e.g. "No medications are '
-          'logged yet") instead of saying you lack access.\n\n'
-          'Care data: $contextJson';
-      _loadingContext = false;
-    });
-  }
-
-  String _buildDailySummary({
-    required List<CareScheduleItem> careSchedule,
-    required List<Shift> shifts,
-    required List<Caregiver> caregivers,
-    required List<Medication> medications,
-    required List<Task> tasks,
-  }) {
-    if (careSchedule.isEmpty &&
-        shifts.isEmpty &&
-        medications.isEmpty &&
-        tasks.isEmpty) {
-      return "No care activity has been logged yet today — add a "
-          'medication, task, or shift to see a summary here.';
+  String _buildDailySummary(List<PillModel> pills, List<VisitModel> visits) {
+    if (pills.isEmpty && visits.isEmpty) {
+      return "No medications or visits are logged yet — add one to see a "
+          'summary here.';
     }
 
-    final caregiverNames = {for (final c in caregivers) c.id: c.name};
-
-    final medsTaken =
-        medications.where((m) => m.status == MedicationStatus.taken).length;
-    final medsMissed = medications
-        .where((m) => m.status == MedicationStatus.missedYesterday)
-        .length;
-    final medsRemaining = medications.length - medsTaken;
-
-    final pendingTasks =
-        tasks.where((t) => t.status == TaskStatus.pending).length;
-
-    final pendingCare = careSchedule
-        .where((c) => c.status != CareScheduleStatus.completed)
-        .length;
-
-    Shift? onDutyShift;
-    Shift? nextShift;
-    for (final shift in shifts) {
-      if (shift.status == ShiftStatus.now) {
-        onDutyShift = shift;
-      } else if (nextShift == null && shift.status == ShiftStatus.upcoming) {
-        nextShift = shift;
-      }
-    }
+    final pillsRemaining = pills.where((p) => !p.isTaken).length;
+    final visitsPending = visits.where((v) => !v.isHandled).length;
 
     final parts = <String>[];
-
-    if (medications.isNotEmpty) {
-      parts.add(medsMissed > 0
-          ? 'Dad has $medsRemaining medication${medsRemaining == 1 ? '' : 's'} '
-              'left today and missed $medsMissed yesterday.'
-          : 'Dad has $medsRemaining of ${medications.length} '
-              'medication${medications.length == 1 ? '' : 's'} left today.');
+    if (pills.isNotEmpty) {
+      parts.add('Dad has $pillsRemaining of ${pills.length} '
+          'medication${pills.length == 1 ? '' : 's'} left today.');
     }
-
-    if (pendingCare > 0) {
-      parts.add('$pendingCare care schedule item'
-          '${pendingCare == 1 ? '' : 's'} still need attention.');
+    if (visitsPending > 0) {
+      parts.add('$visitsPending visit${visitsPending == 1 ? '' : 's'} '
+          'still need${visitsPending == 1 ? 's' : ''} scheduling attention.');
     }
-
-    if (pendingTasks > 0) {
-      parts.add(
-          '$pendingTasks task${pendingTasks == 1 ? '' : 's'} still pending.');
-    }
-
-    if (onDutyShift != null) {
-      final name = caregiverNames[onDutyShift.caregiverId] ?? 'Someone';
-      parts.add('$name is on duty now (${onDutyShift.label}).');
-    } else if (nextShift != null) {
-      final name = caregiverNames[nextShift.caregiverId] ?? 'Someone';
-      parts.add(
-          '$name is up next for ${nextShift.label} at ${nextShift.startTime}.');
-    }
-
     if (parts.isEmpty) {
       return 'Everything looks on track for today.';
     }
@@ -267,7 +180,6 @@ class _SanadScreenState extends State<SanadScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -327,23 +239,14 @@ class _SanadScreenState extends State<SanadScreen> {
             const Text('🌿', style: TextStyle(fontSize: 18)),
             const SizedBox(width: 10),
             Expanded(
-              child: _loadingContext
-                  ? SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: _colors.onPrimaryContainer,
-                      ),
-                    )
-                  : Text(
-                      _dailySummary,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: _colors.onPrimaryContainer,
-                        height: 1.4,
-                      ),
-                    ),
+              child: Text(
+                _dailySummary,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: _colors.onPrimaryContainer,
+                  height: 1.4,
+                ),
+              ),
             ),
           ],
         ),
@@ -529,30 +432,6 @@ class _SanadScreenState extends State<SanadScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return BottomNavigationBar(
-      currentIndex: 4,
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: _colors.surfaceContainerHighest,
-      selectedItemColor: _colors.primary,
-      unselectedItemColor: _colors.onSurfaceVariant,
-      selectedLabelStyle:
-          GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600),
-      unselectedLabelStyle: GoogleFonts.inter(fontSize: 11),
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined), label: 'Schedule'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.medication_outlined), label: 'Medications'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.checklist_outlined), label: 'Tasks'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.smart_toy_outlined), label: 'Assistant'),
-      ],
     );
   }
 }

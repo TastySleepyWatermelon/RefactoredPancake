@@ -66,6 +66,17 @@ class AiService {
     return _extractOutputText(decoded);
   }
 
+  /// Single-shot convenience call: sends [context] as one user turn with no
+  /// prior history, for callers that build their own combined prompt string.
+  Future<String> getCompletion(String context) {
+    return sendMessage(
+      systemPrompt: 'You are Sanad, a helpful family-care coordination '
+          'assistant. Answer briefly and warmly.',
+      history: const [],
+      message: context,
+    );
+  }
+
   /// Walks the Responses API `output` array to find the assistant's text.
   ///
   /// The array can contain other item types (e.g. tool calls); the reply
